@@ -1,37 +1,37 @@
 [
   {
     "device_id": "1",
-    "timestamp": 1508352101084,
-    "temp": 68
+    "timestamp": 1508382022172,
+    "temperature": 77
   },
   {
     "device_id": "2",
-    "timestamp": 1508352102727,
-    "temp": 66
+    "timestamp": 1508382023553,
+    "temperature": 79
   },
   {
     "device_id": "3",
-    "timestamp": 1508352104116,
-    "temp": 60
+    "timestamp": 1508382024885,
+    "temperature": 51
   },
   {
     "device_id": "4",
-    "timestamp": 1508352107510,
-    "temp": 99
+    "timestamp": 1508382027435,
+    "temperature": 76
   },
   {
     "device_id": "5",
-    "timestamp": 1508376434565,
-    "temp": 93
+    "timestamp": 1508383073806,
+    "temperature": 77
   },
   {
     "device_id": "6",
-    "timestamp": 1508376437858,
-    "temp": 60
+    "timestamp": 1508383078130,
+    "temperature": 99
   },
   {
     "device_id": "7",
-    "timestamp": 1508376529193,
-    "temp": 62
+    "timestamp": 1508383118275,
+    "temperature": 66
   }
 ]

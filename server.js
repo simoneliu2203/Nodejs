@@ -3,7 +3,7 @@ var read_in = fs.readFileSync('data.json'); //Read in the data.json file
 var data = JSON.parse(read_in);
 var db =[];                                 //Create empty array
 db = data;                                  //Pass data from data.json to db array
-var length = Object.keys(db).length+1;
+var length = Object.keys(db).length;
 
 console.log('Server is starting');
 
@@ -14,25 +14,28 @@ function listening() {
 	console.log("Server running at http://localhost:3000/");
 }
 
-//app.use(express.static('public'));                                  //Set front page of localhost:3000
-
-app.get('/temp', addData, retrieveAll);                             //URL to temp, add a new data to the data set data.json and retrieve them all
 app.get('/', function(request,response){
 	response.send("Hi Simone");
 });
+//app.use(express.static('public'));                                  //Set front page of localhost:3000
+
+app.get('/temp', addData, retrieveAll);                             //URL to temp, add a new data to the data set data.json and retrieve them all
+app.get('/temp/lastest', recent_submission);
+app.get('/temp/highest', highest_submission);
+
 
 function retrieveAll(request, response) { 
-  console.log(Object.keys(db).length);  
+  //console.log(Object.keys(db).length);  
   response.send(data);	
 }
 
 function addData(request, response,next) {
   var device = {};
-  var id = length;
+  var id = length+1;
   device.device_id = id.toString();
   var time = new Date();
   device.timestamp = time.getTime();
-  device.temp = Math.floor(Math.random()*51) + 50;
+  device.temperature = Math.floor(Math.random()*51) + 50;
   db.push(device);
   var reply = {
     status: 'Data added'
@@ -42,6 +45,21 @@ function addData(request, response,next) {
     function finished(err) {
     };
   next();
+  }
+
+  function recent_submission(request,response){
+    response.send(db[length-1]);
+  }
+
+  function highest_submission(request,response){
+    //console.log(db[3].temperature);
+    //response.send(db[3]);
+    var max;
+    for (var i =0; i<length; i++){
+      if (!max || parseInt(db[i].temperature) > parseInt(max.temperature))
+      max = db[i];
+    }
+    response.send(max);
   }
 
 
