@@ -22,10 +22,11 @@ app.get('/', function(request,response){
 app.get('/temp', addData, retrieveAll);                             //URL to temp, add a new data to the data set data.json and retrieve them all
 app.get('/temp/lastest', recent_submission);
 app.get('/temp/highest', highest_submission);
+app.get('/temp/lowest', lowest_submission);
+app.get('/temp/average', avg_submission);
 
 
 function retrieveAll(request, response) { 
-  //console.log(Object.keys(db).length);  
   response.send(data);	
 }
 
@@ -52,8 +53,6 @@ function addData(request, response,next) {
   }
 
   function highest_submission(request,response){
-    //console.log(db[3].temperature);
-    //response.send(db[3]);
     var max;
     for (var i =0; i<length; i++){
       if (!max || parseInt(db[i].temperature) > parseInt(max.temperature))
@@ -61,6 +60,27 @@ function addData(request, response,next) {
     }
     response.send(max);
   }
+
+  function lowest_submission(request,response){
+    var min;
+    for (var i =0; i<length; i++){
+      if (!min || parseInt(db[i].temperature) < parseInt(min.temperature))
+      min = db[i];
+    }
+    response.send(min);
+  }
+
+  function avg_submission(request,response){
+    var sum=0;
+    var avg=0;
+    for (var i =0; i<length; i++){
+      sum = sum + parseInt(db[i].temperature);
+    }
+    avg=sum/length;
+    response.send('The average submission is: '+ avg.toString());
+  }
+
+
 
 
 
