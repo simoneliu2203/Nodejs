@@ -16,7 +16,7 @@ function listening() {
 }
 
 app.get('/', function(request,response){
-	response.send("Hi Simone");
+	response.send("NodeJS Project. Created by Y Liu, Evan Shelby and Nicholas Marston ");
 });
 //app.use(express.static('public'));                                  
 
@@ -62,7 +62,6 @@ function latest_submission(request,response){
 
 function highest_submission(request,response){
   var max;
-  console.log(length);
   for (var i =0; i<length; i++){
     if (!max || parseFloat(db[i].temperature) > parseFloat(max.temperature)){
       max = db[i];
