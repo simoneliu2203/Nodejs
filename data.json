@@ -1,37 +1,102 @@
 [
   {
     "device_id": "1",
-    "timestamp": 1508382022172,
-    "temperature": 77
+    "timestamp": 1508447844,
+    "temperature": 86.4
   },
   {
     "device_id": "2",
-    "timestamp": 1508382023553,
-    "temperature": 79
+    "timestamp": 1508447846,
+    "temperature": 54
   },
   {
     "device_id": "3",
-    "timestamp": 1508382024885,
-    "temperature": 51
+    "timestamp": 1508447857,
+    "temperature": 69.9
   },
   {
     "device_id": "4",
-    "timestamp": 1508382027435,
-    "temperature": 76
+    "timestamp": 1508447858,
+    "temperature": 64.9
   },
   {
     "device_id": "5",
-    "timestamp": 1508383073806,
-    "temperature": 77
+    "timestamp": 1508447860,
+    "temperature": 86.3
   },
   {
     "device_id": "6",
-    "timestamp": 1508383078130,
-    "temperature": 99
+    "timestamp": 1508447861,
+    "temperature": 74.8
   },
   {
     "device_id": "7",
-    "timestamp": 1508383118275,
-    "temperature": 66
+    "timestamp": 1508447863,
+    "temperature": 94.3
+  },
+  {
+    "device_id": "8",
+    "timestamp": 1508447864,
+    "temperature": 83.9
+  },
+  {
+    "device_id": "9",
+    "timestamp": 1508447866,
+    "temperature": 66.7
+  },
+  {
+    "device_id": "10",
+    "timestamp": 1508447868,
+    "temperature": 95.5
+  },
+  {
+    "device_id": "11",
+    "timestamp": 1508447869,
+    "temperature": 57.9
+  },
+  {
+    "device_id": "12",
+    "timestamp": 1508447870,
+    "temperature": 74.2
+  },
+  {
+    "device_id": "13",
+    "timestamp": 1508447871,
+    "temperature": 59.6
+  },
+  {
+    "device_id": "14",
+    "timestamp": 1508447872,
+    "temperature": 79.7
+  },
+  {
+    "device_id": "15",
+    "timestamp": 1508447873,
+    "temperature": 58.8
+  },
+  {
+    "device_id": "16",
+    "timestamp": 1508447874,
+    "temperature": 68.6
+  },
+  {
+    "device_id": "17",
+    "timestamp": 1508447875,
+    "temperature": 60.2
+  },
+  {
+    "device_id": "18",
+    "timestamp": 1508447878,
+    "temperature": 69.2
+  },
+  {
+    "device_id": "19",
+    "timestamp": 1508447879,
+    "temperature": 80.8
+  },
+  {
+    "device_id": "20",
+    "timestamp": 1508447880,
+    "temperature": 98.3
   }
 ]

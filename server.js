@@ -7,7 +7,8 @@ var length = Object.keys(db).length;
 
 console.log('Server is starting');
 
-var express = require('express');                                   //Create server port 3000
+//Create server port 3000
+var express = require('express');                              
 var app = express();
 var server = app.listen(3000, listening);
 function listening() {
@@ -17,78 +18,176 @@ function listening() {
 app.get('/', function(request,response){
 	response.send("Hi Simone");
 });
-//app.use(express.static('public'));                                  //Set front page of localhost:3000
+//app.use(express.static('public'));                                  
 
-app.get('/temp', addData, retrieveAll);                             //URL to temp, add a new data to the data set data.json and retrieve them all
-app.get('/temp/lastest', recent_submission);
+
+//Routes
+app.post('/temp', addData);
+app.get('/temp', addData, retrieveAll);                            
+app.get('/temp/latest', latest_submission);
 app.get('/temp/highest', highest_submission);
 app.get('/temp/lowest', lowest_submission);
 app.get('/temp/average', avg_submission);
+app.get('/temp/:device_id',find_id);
+app.get('/temp/:device_id/latest', id_latest);
+app.get('/temp/:device_id/highest', id_highest);
+app.get('/temp/:device_id/lowest', id_lowest);
+app.get('/temp/:device_id/average', id_avg);
 
 
-function retrieveAll(request, response) { 
-  response.send(data);	
+
+//Functions
+function addData(request, response, next) {
+    var device = {};
+    var id=Math.floor((Math.random() * 20) + 1);;
+    device.device_id = id.toString();
+    var time = new Date();
+    device.timestamp = Math.floor(time.getTime()/1000);
+    device.temperature = parseFloat(((Math.random()*51) + 50).toFixed(1));
+    db.push(device);
+    var new_device = JSON.stringify(db, null, 2);
+    fs.writeFile('data.json', new_device, 'utf8', finished);
+      function finished(err) {
+      };
+      next();
 }
 
-function addData(request, response,next) {
-  var device = {};
-  var id = length+1;
-  device.device_id = id.toString();
-  var time = new Date();
-  device.timestamp = time.getTime();
-  device.temperature = Math.floor(Math.random()*51) + 50;
-  db.push(device);
-  var reply = {
-    status: 'Data added'
-  }
-  var new_device = JSON.stringify(db, null, 2);
-  fs.writeFile('data.json', new_device, 'utf8', finished);
-    function finished(err) {
-    };
-  next();
-  }
+function retrieveAll(request, response) { 
+    response.send(db);	
+}
 
-  function recent_submission(request,response){
+function latest_submission(request,response){
     response.send(db[length-1]);
-  }
+}
 
-  function highest_submission(request,response){
-    var max;
-    for (var i =0; i<length; i++){
-      if (!max || parseInt(db[i].temperature) > parseInt(max.temperature))
+function highest_submission(request,response){
+  var max;
+  console.log(length);
+  for (var i =0; i<length; i++){
+    if (!max || parseFloat(db[i].temperature) > parseFloat(max.temperature)){
       max = db[i];
     }
-    response.send(max);
   }
+  response.send(max);
+}
 
-  function lowest_submission(request,response){
-    var min;
-    for (var i =0; i<length; i++){
-      if (!min || parseInt(db[i].temperature) < parseInt(min.temperature))
-      min = db[i];
+
+function lowest_submission(request,response){
+  var min;
+  for (var i =0; i<length; i++){
+    if (!min || parseFloat(db[i].temperature) < parseFloat(min.temperature)){
+    min = db[i];
     }
-    response.send(min);
   }
+  response.send(min);
+}
 
-  function avg_submission(request,response){
-    var sum=0;
+function avg_submission(request,response){
+    var sum =0;
     var avg=0;
     for (var i =0; i<length; i++){
-      sum = sum + parseInt(db[i].temperature);
-    }
-    avg=sum/length;
+      sum = sum + parseFloat(db[i].temperature);
+    }    
+    avg=(sum/length).toFixed(1);
     response.send('The average submission is: '+ avg.toString());
+}
+
+function find_id(request,response){
+    sensor = [];
+    for (var i=0; i<length; i++){
+      if (db[i].device_id === request.params.device_id){
+        sensor.push({timestamp: db[i].timestamp, temperature: db[i].temperature})
+      }
+    }
+    if (sensor.length === 0){
+      response.send('ERROR 404 data not found')
+    }
+    else{
+      response.send(sensor);
+    }
+    
+}
+
+function id_latest(request,response){
+    sensor = [];
+    for (var i = length-1; i> 0; i--){
+      if (db[i].device_id === request.params.device_id){
+        sensor.push({timestamp: db[i].timestamp, temperature: db[i].temperature});
+        break;
+      }    
+    }
+    if (sensor.length === 0){
+      response.send('ERROR 404 data not found')
+    }
+    else{
+      response.send(sensor);
+    }
+}
+
+function id_highest(request,response){
+    sensor = [];
+    set = [];
+    for (var i=0; i<length; i++){
+      if (db[i].device_id === request.params.device_id){
+        sensor.push(db[i]);
+      }
+    }
+    if (sensor.length === 0){
+      response.send('ERROR 404 data not found')
+    }
+    else{
+      var max;
+      for (var i =0; i<sensor.length; i++){
+        if (!max || parseFloat(sensor[i].temperature) > parseFloat(max.temperature)){
+          max = sensor[i];
+          set = ({timestamp: sensor[i].timestamp, temperature: sensor[i].temperature})
+        }
+      }
+      response.send(set);
+    }
+}
+
+function id_lowest(request,response){
+  sensor = [];
+  set = [];
+  for (var i=0; i<length; i++){
+    if (db[i].device_id === request.params.device_id){
+      sensor.push(db[i]);
+    }
   }
+  if (sensor.length === 0){
+    response.send('ERROR 404 data not found')
+  }
+  else{
+    var min;
+    for (var i =0; i<sensor.length; i++){
+      if (!min || parseFloat(sensor[i].temperature) < parseFloat(min.temperature)){
+        min = sensor[i];
+        set = ({timestamp: sensor[i].timestamp, temperature: sensor[i].temperature})
+      }
+    }
+    response.send(set);
+  }
+}
 
-
-
-
-
-
-
-///// Trash
-
-  /*app.get('/', function(request,response){
-    response.send("Hi Simone");
-  });*/
-
+function id_avg(request,response){
+  sensor = [];
+  set = [];
+  for (var i=0; i<length; i++){
+    if (db[i].device_id === request.params.device_id){
+      sensor.push(db[i]);
+    }
+  }
+  if (sensor.length === 0){
+    response.send('ERROR 404 data not found')
+  }
+  else{
+    var sum=0;
+    var avg=0;
+    for (var i =0; i<sensor.length; i++){
+      sum = sum + parseFloat(sensor[i].temperature);
+    }    
+    avg=(sum/sensor.length).toFixed(1);
+    response.send('The average submission for this device is: '+ avg.toString());
+  }
+}
