@@ -28,10 +28,9 @@ app.get('/', function(request,response){
 });
 //app.use(express.static('public'));                                  
 
+setTimeout(timer_add, 5000); //Every 5000ms, add a new data to a device
 
 //Routes
-
-setTimeout(timer_add, 5000);
 app.post('/temp', addData);
 app.get('/temp', addData, retrieveAll);                            
 app.get('/temp/latest', latest_submission);
