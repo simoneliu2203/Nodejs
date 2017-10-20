@@ -30,6 +30,8 @@ app.get('/', function(request,response){
 
 
 //Routes
+
+//setTimeout(timer_add, 8000);
 app.post('/temp', addData);
 app.get('/temp', addData, retrieveAll);                            
 app.get('/temp/latest', latest_submission);
@@ -41,11 +43,26 @@ app.get('/temp/:device_id/latest', id_latest);
 app.get('/temp/:device_id/highest', id_highest);
 app.get('/temp/:device_id/lowest', id_lowest);
 app.get('/temp/:device_id/average', id_avg);
+app.get('/cel', toCel);
 
-setTimeout(timer_add, 4000);
 
 
 //Functions
+function toCel(request, response){
+  var sensor = [];
+  for (var i =0; i<length; i++){
+    db[i].temperature = parseFloat(((parseFloat(db[i].temperature)-32)*5/9).toFixed(1));
+    sensor.push(db[i]);
+  }
+  //console.log(sensor);
+  response.send(sensor);
+}
+
+
+
+
+
+
 
 //Add a new data every 4000ms with setTimeout
 function timer_add() {
@@ -64,7 +81,7 @@ function timer_add() {
     function finished(err) {
     };      
     console.log("Added: "+ text_device);
-    setTimeout(timer_add, 4000);
+    //setTimeout(timer_add, 8000);
     
 }
 
