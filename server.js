@@ -11,7 +11,7 @@ var read_in = fs.readFileSync('data.json');
 var data = JSON.parse(read_in);
 var db =[];                                 
 db = data;                                  
-var length = Object.keys(db).length;
+//var length = Object.keys(db).length;
 
 console.log('Server is starting');
 
@@ -31,7 +31,7 @@ app.get('/', function(request,response){
 
 //Routes
 
-//setTimeout(timer_add, 8000);
+setTimeout(timer_add, 5000);
 app.post('/temp', addData);
 app.get('/temp', addData, retrieveAll);                            
 app.get('/temp/latest', latest_submission);
@@ -48,22 +48,6 @@ app.get('/cel', toCel);
 
 
 //Functions
-function toCel(request, response){
-  var sensor = [];
-  for (var i =0; i<length; i++){
-    db[i].temperature = parseFloat(((parseFloat(db[i].temperature)-32)*5/9).toFixed(1));
-    sensor.push(db[i]);
-  }
-  //console.log(sensor);
-  response.send(sensor);
-}
-
-
-
-
-
-
-
 //Add a new data every 4000ms with setTimeout
 function timer_add() {
   var device = {};
@@ -81,12 +65,12 @@ function timer_add() {
     function finished(err) {
     };      
     console.log("Added: "+ text_device);
-    //setTimeout(timer_add, 8000);
+    setTimeout(timer_add, 5000);
     
 }
 
 
-//Add a new value to a random device (by default, there are 20 devices)
+//Add a new value to a random device (by default, there are only 20 devices)
 function addData(request, response, next) {
     var device = {};
     var id=Math.floor((Math.random() * 20) + 1);;
@@ -111,13 +95,13 @@ function retrieveAll(request, response) {
 
 //Retrieve the most recent submission
 function latest_submission(request,response){
-    response.send(db[length-1]);
+    response.send(db[db.length-1]);
 }
 
 //Retrieve the most highest temperature
 function highest_submission(request,response){
   var max;
-  for (var i =0; i<length; i++){
+  for (var i =0; i<db.length; i++){
     if (!max || parseFloat(db[i].temperature) > parseFloat(max.temperature)){
       max = db[i];
     }
@@ -128,7 +112,7 @@ function highest_submission(request,response){
 //Retrieve the most lowest temperature
 function lowest_submission(request,response){
   var min;
-  for (var i =0; i<length; i++){
+  for (var i =0; i<db.length; i++){
     if (!min || parseFloat(db[i].temperature) < parseFloat(min.temperature)){
     min = db[i];
     }
@@ -140,17 +124,17 @@ function lowest_submission(request,response){
 function avg_submission(request,response){
     var sum =0;
     var avg=0;
-    for (var i =0; i<length; i++){
+    for (var i =0; i<db.length; i++){
       sum = sum + parseFloat(db[i].temperature);
     }    
-    avg=(sum/length).toFixed(1);
+    avg=(sum/db.length).toFixed(1);
     response.send('The average submission is: '+ avg.toString());
 }
 
 //Get all the data from a specific device_id
 function find_id(request,response){
     sensor = [];
-    for (var i=0; i<length; i++){
+    for (var i=0; i<db.length; i++){
       if (db[i].device_id === request.params.device_id){
         sensor.push({timestamp: db[i].timestamp, temperature: db[i].temperature})
       }
@@ -166,7 +150,7 @@ function find_id(request,response){
 //Get the most recent submission from a specific device_id
 function id_latest(request,response){
     sensor = [];
-    for (var i = length-1; i> 0; i--){
+    for (var i = db.length-1; i> 0; i--){
       if (db[i].device_id === request.params.device_id){
         sensor.push({timestamp: db[i].timestamp, temperature: db[i].temperature});
         break;
@@ -185,7 +169,7 @@ function id_latest(request,response){
 function id_highest(request,response){
     sensor = [];
     set = [];
-    for (var i=0; i<length; i++){
+    for (var i=0; i<db.length; i++){
       if (db[i].device_id === request.params.device_id){
         sensor.push(db[i]);
       }
@@ -209,7 +193,7 @@ function id_highest(request,response){
 function id_lowest(request,response){
   sensor = [];
   set = [];
-  for (var i=0; i<length; i++){
+  for (var i=0; i<db.length; i++){
     if (db[i].device_id === request.params.device_id){
       sensor.push(db[i]);
     }
@@ -233,7 +217,7 @@ function id_lowest(request,response){
 function id_avg(request,response){
   sensor = [];
   set = [];
-  for (var i=0; i<length; i++){
+  for (var i=0; i<db.length; i++){
     if (db[i].device_id === request.params.device_id){
       sensor.push(db[i]);
     }
@@ -250,4 +234,14 @@ function id_avg(request,response){
     avg=(sum/sensor.length).toFixed(1);
     response.send('The average submission for this device is: '+ avg.toString());
   }
+}
+
+//Convert temperature from fahrenheit to celcius
+function toCel(request, response){
+  var sensor = [];
+  for (var i =0; i<db.length; i++){
+    db[i].temperature = parseFloat(((parseFloat(db[i].temperature)-32)*5/9).toFixed(1));
+    sensor.push(db[i]);
+  }
+  response.send(sensor);
 }
