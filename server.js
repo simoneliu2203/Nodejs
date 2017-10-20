@@ -64,7 +64,7 @@ function timer_add() {
     function finished(err) {
     };      
     console.log("Added: "+ text_device);
-    setTimeout(timer_add, 2000);
+    setTimeout(timer_add, 4000);
     
 }
 
