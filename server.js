@@ -1,8 +1,16 @@
+//// NODE JS PROJECT
+//// Name: Y LIU 
+//// Date: 10/19/2017
+
+
+
 var fs = require('fs');
-var read_in = fs.readFileSync('data.json'); //Read in the data.json file
+
+//Read in the data.json file
+var read_in = fs.readFileSync('data.json'); 
 var data = JSON.parse(read_in);
-var db =[];                                 //Create empty array
-db = data;                                  //Pass data from data.json to db array
+var db =[];                                 
+db = data;                                  
 var length = Object.keys(db).length;
 
 console.log('Server is starting');
@@ -34,9 +42,34 @@ app.get('/temp/:device_id/highest', id_highest);
 app.get('/temp/:device_id/lowest', id_lowest);
 app.get('/temp/:device_id/average', id_avg);
 
+setTimeout(timer_add, 4000);
 
 
 //Functions
+
+//Add a new data every 4000ms with setTimeout
+function timer_add() {
+  var device = {};
+  var id=Math.floor((Math.random() * 20) + 1);;
+  device.device_id = id.toString();
+  var time = new Date();
+  device.timestamp = Math.floor(time.getTime()/1000);
+  device.temperature = parseFloat(((Math.random()*51) + 50).toFixed(1));
+  db.push(device);
+
+  //Write the new data to the json file
+  var text_device = JSON.stringify(device, null, 2);
+  var new_device = JSON.stringify(db, null, 2);
+  fs.writeFile('data.json', new_device, 'utf8', finished);
+    function finished(err) {
+    };      
+    console.log("Added: "+ text_device);
+    setTimeout(timer_add, 2000);
+    
+}
+
+
+//Add a new value to a random device (by default, there are 20 devices)
 function addData(request, response, next) {
     var device = {};
     var id=Math.floor((Math.random() * 20) + 1);;
@@ -45,21 +78,26 @@ function addData(request, response, next) {
     device.timestamp = Math.floor(time.getTime()/1000);
     device.temperature = parseFloat(((Math.random()*51) + 50).toFixed(1));
     db.push(device);
+
+    //Write the new data to the json file
     var new_device = JSON.stringify(db, null, 2);
     fs.writeFile('data.json', new_device, 'utf8', finished);
       function finished(err) {
-      };
+      };      
       next();
 }
 
+//Retrieve all the value from the json array
 function retrieveAll(request, response) { 
     response.send(db);	
 }
 
+//Retrieve the most recent submission
 function latest_submission(request,response){
     response.send(db[length-1]);
 }
 
+//Retrieve the most highest temperature
 function highest_submission(request,response){
   var max;
   for (var i =0; i<length; i++){
@@ -70,7 +108,7 @@ function highest_submission(request,response){
   response.send(max);
 }
 
-
+//Retrieve the most lowest temperature
 function lowest_submission(request,response){
   var min;
   for (var i =0; i<length; i++){
@@ -81,6 +119,7 @@ function lowest_submission(request,response){
   response.send(min);
 }
 
+//Find the average of the temperature
 function avg_submission(request,response){
     var sum =0;
     var avg=0;
@@ -91,6 +130,7 @@ function avg_submission(request,response){
     response.send('The average submission is: '+ avg.toString());
 }
 
+//Get all the data from a specific device_id
 function find_id(request,response){
     sensor = [];
     for (var i=0; i<length; i++){
@@ -103,10 +143,10 @@ function find_id(request,response){
     }
     else{
       response.send(sensor);
-    }
-    
+    }    
 }
 
+//Get the most recent submission from a specific device_id
 function id_latest(request,response){
     sensor = [];
     for (var i = length-1; i> 0; i--){
@@ -123,6 +163,8 @@ function id_latest(request,response){
     }
 }
 
+
+//Get the data of the highest temperature from a specific device
 function id_highest(request,response){
     sensor = [];
     set = [];
@@ -146,6 +188,7 @@ function id_highest(request,response){
     }
 }
 
+//Get the data of the lowest temperature from a specific device
 function id_lowest(request,response){
   sensor = [];
   set = [];
@@ -169,6 +212,7 @@ function id_lowest(request,response){
   }
 }
 
+//Get the average temperature for a specific device
 function id_avg(request,response){
   sensor = [];
   set = [];
