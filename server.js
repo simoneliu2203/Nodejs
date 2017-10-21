@@ -64,8 +64,7 @@ function timer_add() {
     function finished(err) {
     };      
     console.log("Added: "+ text_device);
-    setTimeout(timer_add, 5000);
-    
+    setTimeout(timer_add, 5000);    
 }
 
 
@@ -162,7 +161,6 @@ function id_latest(request,response){
       response.send(sensor);
     }
 }
-
 
 //Get the data of the highest temperature from a specific device
 function id_highest(request,response){
